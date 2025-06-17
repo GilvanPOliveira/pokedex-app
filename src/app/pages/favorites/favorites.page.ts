@@ -1,35 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { FavoritesService } from '../../services/favorites.service';
-
-interface PokemonCard {
-  id: number;
-  name: string;
-  imageUrl: string;
-}
+import { IonicModule }        from '@ionic/angular';
+import { CommonModule }       from '@angular/common';
+import { RouterModule }       from '@angular/router';
+import { FavoritesService, PokemonCard } from '../../services/favorites.service';
 
 @Component({
   selector: 'app-favorites',
+  standalone: true,
+  imports: [IonicModule, CommonModule, RouterModule],
   templateUrl: './favorites.page.html',
   styleUrls: ['./favorites.page.scss']
 })
 export class FavoritesPage implements OnInit {
   favorites: PokemonCard[] = [];
 
-  constructor(
-    private favoritesService: FavoritesService,
-    private router: Router
-  ) {}
+  constructor(private favoritesService: FavoritesService) {}
 
   ngOnInit(): void {
-    this.loadFavorites();
-  }
-
-  private async loadFavorites(): Promise<void> {
-    this.favorites = await this.favoritesService.listFavorites();
+    this.favoritesService.favorites$.subscribe(list => this.favorites = list);
+    this.favorites = this.favoritesService.listFavorites();
   }
 
   openDetails(id: number): void {
-    this.router.navigate(['/details', id]);
+    window.location.href = `/details/${id}`;
   }
 }

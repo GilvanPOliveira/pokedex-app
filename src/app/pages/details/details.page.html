@@ -1,3 +1,4 @@
+<!-- src/app/pages/details/details.page.html -->
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -8,12 +9,8 @@
 </ion-header>
 
 <ion-content class="app-container">
-
   <ion-card>
-    <img
-      [src]="artworkUrl || imageUrl"
-      [alt]="details.name"
-    />
+    <img [src]="details.sprites.other?.['official-artwork']?.front_default || details.sprites.front_default" [alt]="details.name" />
   </ion-card>
 
   <ion-list>
@@ -42,5 +39,4 @@
       <ion-badge slot="end">{{ loc | titlecase }}</ion-badge>
     </ion-item>
   </ion-list>
-
 </ion-content>

@@ -1,10 +1,11 @@
+/* src/app/pages/details/details.page.scss */
+
 ion-card {
   margin-bottom: 16px;
   img {
     width: 100%;
-    height: auto;
-    border-radius: var(--home-card-radius);
     display: block;
+    border-radius: var(--home-card-radius);
   }
 }
 
@@ -15,6 +16,7 @@ ion-list {
 ion-item {
   --inner-padding-end: var(--home-page-padding);
   --padding-start: var(--home-page-padding);
+
   ion-label {
     font-weight: 500;
   }

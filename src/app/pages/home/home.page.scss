@@ -1,3 +1,5 @@
+/* src/app/pages/home/home.page.scss */
+
 ion-card {
   cursor: pointer;
   border-radius: var(--home-card-radius);
@@ -10,7 +12,6 @@ ion-card {
 
   img {
     width: 100%;
-    height: auto;
     display: block;
     padding: var(--home-page-padding);
   }
