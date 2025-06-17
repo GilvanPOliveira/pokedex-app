@@ -1,0 +1,15 @@
+:root {
+  /* Espaçamento interno das páginas */
+  --home-page-padding: 16px;
+  /* Espaço entre colunas e linhas do grid */
+  --home-grid-gap: 12px;
+  /* Raio de borda dos cartões */
+  --home-card-radius: 12px;
+  /* Largura máxima do container central */
+  --app-max-width: 1200px;
+}
+
+/* Breakpoints para responsividade */
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;

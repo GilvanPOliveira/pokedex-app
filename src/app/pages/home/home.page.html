@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Pokémon</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="app-container">
+  <ion-grid>
+    <ion-row>
+      <ion-col *ngFor="let p of pokemons" size="6" size-md="4" size-lg="3" (click)="openDetails(p.id)">
+        <ion-card>
+          <img [src]="p.imageUrl" [alt]="p.name" />
+          <ion-card-header>
+            <ion-card-title>{{ p.name | titlecase }}</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-infinite-scroll (ionInfinite)="loadMore($event)" threshold="100px">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Carregando mais Pokémon...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

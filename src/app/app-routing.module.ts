@@ -2,35 +2,35 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 import { HomePage } from './pages/home/home.page';
-import { DetalhesPage } from './pages/detalhes/detalhes.page';
-import { FavoritosPage } from './pages/favoritos/favoritos.page';
+import { detailsPage } from './pages/details/details.page';
+import { favoritesPage } from './pages/favorites/favorites.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: HomePage
+    component: HomePage,
   },
   {
-    path: 'detalhes/:id',
-    component: DetalhesPage
+    path: 'details/:id',
+    component: detailsPage,
   },
   {
-    path: 'favoritos',
-    component: FavoritosPage
+    path: 'favorites',
+    component: favoritesPage,
   },
   {
     path: '**',
-    redirectTo: ''
-  }
+    redirectTo: '',
+  },
 ];
 
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
       preloadingStrategy: PreloadAllModules,
-      scrollPositionRestoration: 'enabled'
-    })
+      scrollPositionRestoration: 'enabled',
+    }),
   ],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}

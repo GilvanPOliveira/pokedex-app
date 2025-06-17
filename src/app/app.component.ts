@@ -26,7 +26,7 @@ import { filter } from 'rxjs/operators';
               <ion-label>Lista</ion-label>
             </ion-segment-button>
             <ion-segment-button value="favorites">
-              <ion-label>Favoritos</ion-label>
+              <ion-label>favorites</ion-label>
             </ion-segment-button>
           </ion-segment>
         </ion-toolbar>
