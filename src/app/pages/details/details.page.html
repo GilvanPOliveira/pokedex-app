@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/" />
+    </ion-buttons>
+    <ion-title>{{ details.name | titlecase }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="app-container">
+
+  <ion-card>
+    <img
+      [src]="artworkUrl || imageUrl"
+      [alt]="details.name"
+    />
+  </ion-card>
+
+  <ion-list>
+    <ion-item>
+      <ion-label>Capture Rate</ion-label>
+      <ion-badge slot="end">{{ details.capture_rate }}</ion-badge>
+    </ion-item>
+
+    <ion-item *ngFor="let t of details.types">
+      <ion-label>Type</ion-label>
+      <ion-badge slot="end">{{ t.type.name | titlecase }}</ion-badge>
+    </ion-item>
+
+    <ion-item *ngFor="let a of details.abilities">
+      <ion-label>Ability</ion-label>
+      <ion-badge slot="end">{{ a.ability.name | titlecase }}</ion-badge>
+    </ion-item>
+
+    <ion-item *ngFor="let s of details.stats">
+      <ion-label>{{ s.stat.name | titlecase }}</ion-label>
+      <ion-badge slot="end">{{ s.base_stat }}</ion-badge>
+    </ion-item>
+
+    <ion-item *ngFor="let loc of details.location_areas">
+      <ion-label>Location</ion-label>
+      <ion-badge slot="end">{{ loc | titlecase }}</ion-badge>
+    </ion-item>
+  </ion-list>
+
+</ion-content>
