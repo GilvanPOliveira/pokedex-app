@@ -1,0 +1,47 @@
+.empty {
+  text-align: center;
+  margin-top: 40px;
+  color: #666;
+  font-size: 1.1em;
+}
+
+ion-card {
+  cursor: pointer;
+  border-radius: var(--home-card-radius);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.15s ease-in-out;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+    padding: var(--home-page-padding);
+  }
+
+  ion-card-header {
+    text-align: center;
+    text-transform: capitalize;
+  }
+}
+
+@media (max-width: 576px) {
+  ion-col {
+    width: calc(50% - var(--home-grid-gap));
+  }
+}
+
+@media (min-width: 576px) and (max-width: 768px) {
+  ion-col {
+    width: calc((100% / 3) - var(--home-grid-gap));
+  }
+}
+
+@media (min-width: 768px) {
+  ion-col {
+    width: calc((100% / 4) - var(--home-grid-gap));
+  }
+}

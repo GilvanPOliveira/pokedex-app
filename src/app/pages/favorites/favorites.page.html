@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/" />
+    </ion-buttons>
+    <ion-title>Favoritos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="app-container">
+  <ng-container *ngIf="favorites.length; else emptyState">
+    <ion-grid>
+      <ion-row>
+        <ion-col
+          *ngFor="let p of favorites"
+          size="6"
+          size-md="4"
+          size-lg="3"
+          (click)="openDetails(p.id)"
+        >
+          <ion-card>
+            <img [src]="p.imageUrl" [alt]="p.name" />
+            <ion-card-header>
+              <ion-card-title>{{ p.name | titlecase }}</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ng-container>
+
+  <ng-template #emptyState>
+    <div class="empty">
+      <p>Você não tem Pokémons favoritos ainda.</p>
+    </div>
+  </ng-template>
+</ion-content>
