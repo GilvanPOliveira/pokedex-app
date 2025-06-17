@@ -1,41 +1,35 @@
-/* src/app/pages/home/home.page.scss */
+.app-container {
+  padding: var(--ion-padding);
+}
 
-ion-card {
+ion-list {
+  --ion-item-background: #fafafa;
+}
+
+ion-item {
+  position: relative;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  --inner-padding-end: 48px; // espaço para o ícone
+}
+
+.favorite-icon {
+  font-size: 24px;
   cursor: pointer;
-  border-radius: var(--home-card-radius);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.15s ease-in-out;
-
-  &:hover {
-    transform: translateY(-4px);
-  }
-
-  img {
-    width: 100%;
-    display: block;
-    padding: var(--home-page-padding);
-  }
-
-  ion-card-header {
-    text-align: center;
-    text-transform: capitalize;
-  }
 }
 
-@media (max-width: 576px) {
-  ion-col {
-    width: calc(50% - var(--home-grid-gap));
-  }
+ion-thumbnail {
+  width: 90px;
+  height: 90px;
 }
 
-@media (min-width: 576px) and (max-width: 768px) {
-  ion-col {
-    width: calc((100% / 3) - var(--home-grid-gap));
-  }
+ion-thumbnail img {
+  width: auto;
+  height: auto;
 }
 
-@media (min-width: 768px) {
-  ion-col {
-    width: calc((100% / 4) - var(--home-grid-gap));
-  }
+.empty-state {
+  text-align: center;
+  margin-top: 40px;
+  color: #888;
 }

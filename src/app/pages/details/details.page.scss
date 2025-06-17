@@ -1,26 +1,30 @@
-/* src/app/pages/details/details.page.scss */
+.app-container {
+  padding: var(--ion-padding);
+}
 
 ion-card {
+  border-radius: 12px;
+  overflow: hidden;
   margin-bottom: 16px;
+
   img {
     width: 100%;
     display: block;
-    border-radius: var(--home-card-radius);
+    object-fit: cover;
+    height: 200px;
   }
 }
 
 ion-list {
-  margin-top: 8px;
+  --ion-background-color: #fafafa;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 ion-item {
-  --inner-padding-end: var(--home-page-padding);
-  --padding-start: var(--home-page-padding);
+  --inner-padding-end: 44px;
+}
 
-  ion-label {
-    font-weight: 500;
-  }
-  ion-badge {
-    font-size: 0.9em;
-  }
+ion-badge {
+  font-weight: 600;
 }

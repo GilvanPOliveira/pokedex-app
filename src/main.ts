@@ -15,10 +15,6 @@ bootstrapApplication(AppComponent, {
   providers: [
     provideHttpClient(),
     provideRouter(routes),
-    {
-      provide: 'IONIC_CONFIG',
-      useValue: { mode: 'md' },
-    },
-    importProvidersFrom(IonicModule.forRoot()),
+    importProvidersFrom(IonicModule.forRoot())
   ],
 }).catch((err) => console.error(err));

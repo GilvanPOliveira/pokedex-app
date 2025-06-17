@@ -1,16 +1,20 @@
-<!-- src/app/pages/details/details.page.html -->
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/" />
     </ion-buttons>
     <ion-title>{{ details.name | titlecase }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleFavorite()">
+        <ion-icon slot="icon-only" [name]="isFavorite() ? 'heart' : 'heart-outline'" [color]="isFavorite() ? 'danger' : 'medium'"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="app-container">
+<ion-content class="app-container" *ngIf="details">
   <ion-card>
-    <img [src]="details.sprites.other?.['official-artwork']?.front_default || details.sprites.front_default" [alt]="details.name" />
+    <img [src]="artworkUrl || imageUrl" [alt]="details.name" />
   </ion-card>
 
   <ion-list>

@@ -1,26 +1,39 @@
-<!-- src/app/pages/home/home.page.html -->
 <ion-header>
   <ion-toolbar>
-    <ion-title>Pokémon</ion-title>
+    <ion-title>Pokédex</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/favorites">
+        <ion-icon slot="icon-only" name="heart"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
+
 </ion-header>
 
 <ion-content class="app-container">
-  <ion-grid>
-    <ion-row [style.gap]="'var(--home-grid-gap)'">
-      <ion-col *ngFor="let p of pokemons" size="6" size-md="4" size-lg="3" (click)="openDetails(p.id)">
-        <ion-card>
-          <img [src]="p.imageUrl" [alt]="p.name" />
-          <ion-card-header>
-            <ion-card-title>{{ p.name | titlecase }}</ion-card-title>
-          </ion-card-header>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <ion-list *ngIf="pokemons.length; else semDados">
+    <ion-item *ngFor="let p of pokemons" (click)="openDetails(p.id)" detail>
+      <ion-thumbnail slot="start">
+        <img [src]="p.gifUrl || p.imageUrl" [alt]="p.name" />
+      </ion-thumbnail>
 
-  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMore($event)">
-    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Carregando mais Pokémon...">
-    </ion-infinite-scroll-content>
+      <ion-label>
+        <h2>{{ p.name | titlecase }}</h2>
+        <p>ID: {{ p.id }}</p>
+      </ion-label>
+
+      <ion-icon slot="end" name="heart" [color]="isFavorite(p.id) ? 'danger' : 'medium'" class="favorite-icon" (click)="toggleFavorite(p, $event)"></ion-icon>
+    </ion-item>
+  </ion-list>
+
+  <ng-template #semDados>
+    <div class="empty-state">
+      <p *ngIf="!loading">Nenhum Pokémon carregado.</p>
+      <p *ngIf="loading">Carregando...</p>
+    </div>
+  </ng-template>
+
+  <ion-infinite-scroll *ngIf="pokemons.length" threshold="100px" (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Carregando mais..."></ion-infinite-scroll-content>
   </ion-infinite-scroll>
 </ion-content>
