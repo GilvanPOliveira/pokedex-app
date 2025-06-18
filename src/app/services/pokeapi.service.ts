@@ -23,9 +23,7 @@ export class PokeapiService {
     '/pokemon-species'
   );
 
-  // LRU de até 10 páginas de lista
   private listCache = new LRUCache<string, Observable<PokemonListResponse>>(10);
-  // LRU de até 50 detalhes de Pokémon
   private detailsCache = new LRUCache<
     string,
     Observable<PokemonDetailsWithSprites>

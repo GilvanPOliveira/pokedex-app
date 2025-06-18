@@ -14,7 +14,6 @@
 </ion-header>
 
 <ion-content class="app-container" (ionScroll)="onContentScroll($event)">
-  <!-- Search Results -->
   <ion-list *ngIf="searchMode">
     <ion-item *ngFor="let p of searchResults" (click)="openDetails(p.id)" detail>
       <ion-thumbnail slot="start">
@@ -31,7 +30,6 @@
     </p>
   </ion-list>
 
-  <!-- Main List -->
   <ng-container *ngIf="!searchMode">
     <ion-list *ngIf="pokemons.length; else semDados">
       <ion-item *ngFor="let p of pokemons" (click)="openDetails(p.id)" detail>
@@ -53,12 +51,10 @@
       </div>
     </ng-template>
 
-    <!-- Infinite Scroll -->
     <ion-infinite-scroll *ngIf="pokemons.length" threshold="100px" (ionInfinite)="loadMore($event)">
       <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Carregando mais..."></ion-infinite-scroll-content>
     </ion-infinite-scroll>
 
-    <!-- Load More Button -->
     <ion-button *ngIf="!searchMode && pokemons.length < totalCount" expand="block" (click)="loadMore()" [disabled]="loading">
       {{ loading ? 'Carregando...' : 'Carregar mais' }}
     </ion-button>

@@ -39,7 +39,6 @@ export class HomePage implements OnInit {
   totalCount = 0;
   loading = false;
 
-  // Search
   searchTerm = '';
   private searchSubject = new Subject<string>();
   searchMode = false;
@@ -53,23 +52,19 @@ export class HomePage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // 1) carrega a primeira página
     this.loadPokemons();
 
-    // 2) configura debounce na busca
     this.searchSubject.pipe(
       debounceTime(300),
       distinctUntilChanged()
     ).subscribe(term => this.performSearch(term));
   }
 
-  /** Chamado do template ao digitar */
   onSearchTermChange(term: string): void {
     this.searchTerm = term;
     this.searchSubject.next(term.trim().toLowerCase());
   }
 
-  /** Lógica de busca após debounce */
   private performSearch(term: string): void {
     if (!term) {
       this.searchMode = false;
@@ -97,7 +92,6 @@ export class HomePage implements OnInit {
     });
   }
 
-  /** Carrega página de pokémons (infinite scroll e pre-fetch) */
   private loadPokemons(event?: any): void {
     if (this.loading) return;
     this.loading = true;
@@ -107,7 +101,7 @@ export class HomePage implements OnInit {
         this.totalCount = list.count;
 
         from(list.results).pipe(
-          // 2) mergeMap com concorrência máxima de 5
+ 
           mergeMap(summary => {
             const id = this.pokeService.extractId(summary);
             return this.pokeService.getPokemonDetails(id).pipe(
@@ -139,12 +133,10 @@ export class HomePage implements OnInit {
     });
   }
 
-  /** Chamado pelo infinite scroll manual */
   loadMore(event?: any): void {
     this.loadPokemons(event);
   }
 
-  /** Pré-busca quando rolar além de 70% */
   onContentScroll(ev: any): void {
     const detail = ev.detail;
     const scrollTop = detail.scrollTop;
