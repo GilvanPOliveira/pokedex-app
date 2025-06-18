@@ -15,7 +15,7 @@
 <ion-content class="app-container">
   <div class="sprite-gallery">
     <div *ngFor="let sprite of details.spriteList" class="sprite-item">
-      <img [src]="sprite.url" [alt]="details.name + ' ' + sprite.label" />
+      <img [src]="sprite.url" loading="lazy" [alt]="details.name + ' ' + sprite.label" />
       <p>{{ sprite.label }}</p>
     </div>
   </div>
