@@ -1,102 +1,132 @@
 import { Component, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-
+import { from, of } from 'rxjs';
+import { mergeMap, toArray, map, catchError } from 'rxjs/operators';
 import { PokeapiService } from '../../services/pokeapi.service';
 import { FavoritesService } from '../../services/favorites.service';
-import { forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 export interface PokemonCard {
   id: number;
   name: string;
-  imageUrl: string;
-  gifUrl?: string;
+  gifUrl: string;
 }
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [IonicModule, CommonModule, RouterModule],
+  imports: [IonicModule, CommonModule, FormsModule, RouterModule],
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
+
 export class HomePage implements OnInit {
   pokemons: PokemonCard[] = [];
   offset = 0;
   readonly limit = 20;
+  totalCount = 0;
   loading = false;
-
+  searchTerm = '';
+  searchMode = false;
+  searchResults: PokemonCard[] = [];
   constructor(
     private pokeService: PokeapiService,
     private favService: FavoritesService,
     private router: Router
   ) {}
-
   ngOnInit(): void {
     this.loadPokemons();
   }
-
-  loadPokemons(event?: any): void {
-    if (this.loading) return;
+  private loadPokemons(event?: any): void {
+    if (this.loading) {
+      return;
+    }
     this.loading = true;
-
     this.pokeService.getPokemonList(this.offset, this.limit).subscribe({
       next: (list) => {
-        const newCards = list.results.map((summary) => {
-          const id = this.pokeService.extractId(summary);
-          const card = {
-            id,
-            name: summary.name,
-            imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
-          } as PokemonCard;
-          this.pokemons.push(card);
-          return card;
-        });
-        // agora buscamos os detalhes só para os GIFs:
-        forkJoin(
-          newCards.map((c) =>
-            this.pokeService.getPokemonDetails(c.id).pipe(
-              map((d) => {
-                const sprites = d.sprites as any;
-                return {
-                  id: c.id,
-                  gif:
-                    sprites?.versions?.['generation-v']?.['black-white']?.animated?.front_default || '',
-                };
-              })
-            )
+        this.totalCount = list.count;
+        from(list.results)
+          .pipe(
+            mergeMap(
+              (summary) => {
+                const id = this.pokeService.extractId(summary);
+                return this.pokeService.getPokemonDetails(id).pipe(
+                  map((d) => {
+                    const anim = (d.sprites as any).versions?.[
+                      'generation-v'
+                    ]?.['black-white']?.animated?.front_default;
+                    return {
+                      id,
+                      name: d.name,
+                      gifUrl: anim || d.sprites.front_default,
+                    } as PokemonCard;
+                  }),
+                  catchError(() =>
+                    of({
+                      id,
+                      name: summary.name,
+                      gifUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
+                    } as PokemonCard)
+                  )
+                );
+              },
+              5 
+            ),
+            toArray()
           )
-        ).subscribe((arr) =>
-          arr.forEach(({ id, gif }) => {
-            const card = this.pokemons.find((p) => p.id === id);
-            if (card) card.gifUrl = gif;
-          })
-        );
-        this.offset += this.limit;
+          .subscribe((cards) => {
+            this.pokemons.push(...cards);
+            this.offset += this.limit;
+            this.loading = false;
+            event?.target?.complete();
+          });
       },
-      complete: () => {
+      error: () => {
         this.loading = false;
         event?.target?.complete();
       },
     });
   }
-
-  loadMore(event: any): void {
+  loadMore(event?: any): void {
     this.loadPokemons(event);
   }
-
   openDetails(id: number): void {
     this.router.navigate(['/details', id]);
   }
-
   isFavorite(id: number): boolean {
     return this.favService.isFavorite(id);
   }
-
   toggleFavorite(p: PokemonCard, e: Event): void {
     e.stopPropagation();
     this.favService.toggleFavorite(p);
+  }
+  onSearchTermChange(): void {
+    const term = this.searchTerm.trim().toLowerCase();
+    if (!term) {
+      this.searchMode = false;
+      this.searchResults = [];
+      return;
+    }
+    this.searchMode = true;
+    this.searchResults = [];
+    this.pokeService.getPokemonDetails(term).subscribe({
+      next: (d) => {
+        const anim = (d.sprites as any).versions?.['generation-v']?.[
+          'black-white'
+        ]?.animated?.front_default;
+        this.searchResults = [
+          {
+            id: d.id,
+            name: d.name,
+            gifUrl: anim || d.sprites.front_default,
+          },
+        ];
+      },
+      error: () => {
+        this.searchResults = [];
+      },
+    });
   }
 }

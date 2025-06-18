@@ -11,10 +11,15 @@
   <ng-container *ngIf="favorites.length; else emptyState">
     <ion-grid>
       <ion-row>
-        <ion-col *ngFor="let p of favorites" size="6" size-md="4" size-lg="3" (click)="openDetails(p.id)">
-          <ion-card>
-            <img [src]="p.imageUrl" [alt]="p.name" />
-            <ion-card-header>
+        <ion-col *ngFor="let p of favorites" size="6" size-md="4" size-lg="3">
+          <ion-card class="fav-card">
+            <ion-button fill="clear" color="danger" class="remove-btn" (click)="removeFavorite(p, $event)">
+              <ion-icon name="trash" slot="icon-only"></ion-icon>
+            </ion-button>
+
+            <img [src]="p.gifUrl" [alt]="p.name" (click)="openDetails(p.id)" />
+
+            <ion-card-header (click)="openDetails(p.id)">
               <ion-card-title>{{ p.name | titlecase }}</ion-card-title>
             </ion-card-header>
           </ion-card>
@@ -24,7 +29,7 @@
   </ng-container>
 
   <ng-template #emptyState>
-    <div class="empty-state">
+    <div class="empty">
       <p>Você não tem Pokémons favoritos ainda.</p>
     </div>
   </ng-template>

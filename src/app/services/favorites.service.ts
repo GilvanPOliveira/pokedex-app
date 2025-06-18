@@ -1,21 +1,16 @@
 import { Injectable } from '@angular/core';
 import { PokemonCard } from '../pages/home/home.page';
-
 @Injectable({
   providedIn: 'root'
 })
 export class FavoritesService {
   private favorites: PokemonCard[] = [];
-
   listFavorites(): Promise<PokemonCard[]> {
-    // retorna cópia para evitar mutações externas
     return Promise.resolve([...this.favorites]);
   }
-
   isFavorite(id: number): boolean {
     return this.favorites.some(p => p.id === id);
   }
-
   toggleFavorite(card: PokemonCard): void {
     const idx = this.favorites.findIndex(p => p.id === card.id);
     if (idx >= 0) {

@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Pokédex</ion-title>
+    <ion-title>BSN - Pokédex</ion-title>
     <ion-buttons slot="end">
       <ion-button routerLink="/favorites">
         <ion-icon slot="icon-only" name="heart"></ion-icon>
@@ -8,32 +8,56 @@
     </ion-buttons>
   </ion-toolbar>
 
+  <ion-toolbar>
+    <ion-searchbar [(ngModel)]="searchTerm" (ngModelChange)="onSearchTermChange()" placeholder="Buscar por nome ou ID" showCancelButton="never"></ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content class="app-container">
-  <ion-list *ngIf="pokemons.length; else semDados">
-    <ion-item *ngFor="let p of pokemons" (click)="openDetails(p.id)" detail>
+  <ion-list *ngIf="searchMode">
+    <ion-item *ngFor="let p of searchResults" (click)="openDetails(p.id)" detail>
       <ion-thumbnail slot="start">
-        <img [src]="p.gifUrl || p.imageUrl" [alt]="p.name" />
+        <img [src]="p.gifUrl" [alt]="p.name" />
       </ion-thumbnail>
-
       <ion-label>
         <h2>{{ p.name | titlecase }}</h2>
         <p>ID: {{ p.id }}</p>
       </ion-label>
-
       <ion-icon slot="end" name="heart" [color]="isFavorite(p.id) ? 'danger' : 'medium'" class="favorite-icon" (click)="toggleFavorite(p, $event)"></ion-icon>
     </ion-item>
+    <p *ngIf="searchMode && !searchResults.length" class="no-results">
+      Nenhum Pokémon encontrado.
+    </p>
   </ion-list>
 
-  <ng-template #semDados>
-    <div class="empty-state">
-      <p *ngIf="!loading">Nenhum Pokémon carregado.</p>
-      <p *ngIf="loading">Carregando...</p>
-    </div>
-  </ng-template>
+  <ng-container *ngIf="!searchMode">
+    <ion-list *ngIf="pokemons.length; else semDados">
+      <ion-item *ngFor="let p of pokemons" (click)="openDetails(p.id)" detail>
+        <ion-thumbnail slot="start">
+          <img [src]="p.gifUrl" [alt]="p.name" />
+        </ion-thumbnail>
+        <ion-label>
+          <h2>{{ p.name | titlecase }}</h2>
+          <p>ID: {{ p.id }}</p>
+        </ion-label>
+        <ion-icon slot="end" name="heart" [color]="isFavorite(p.id) ? 'danger' : 'medium'" class="favorite-icon" (click)="toggleFavorite(p, $event)"></ion-icon>
+      </ion-item>
+    </ion-list>
 
-  <ion-infinite-scroll *ngIf="pokemons.length" threshold="100px" (ionInfinite)="loadMore($event)">
-    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Carregando mais..."></ion-infinite-scroll-content>
-  </ion-infinite-scroll>
+    <ng-template #semDados>
+      <div class="empty-state">
+        <p *ngIf="!loading">Nenhum Pokémon carregado.</p>
+        <p *ngIf="loading">Carregando...</p>
+      </div>
+    </ng-template>
+
+    <ion-infinite-scroll *ngIf="pokemons.length" threshold="100px" (ionInfinite)="loadMore($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Carregando mais..."></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+    <ion-button *ngIf="!searchMode && pokemons.length < totalCount" expand="block" (click)="loadMore()" [disabled]="loading">
+      {{ loading ? 'Carregando...' : 'Carregar mais' }}
+    </ion-button>
+
+  </ng-container>
 </ion-content>

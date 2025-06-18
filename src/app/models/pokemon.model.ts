@@ -4,17 +4,18 @@ export interface PokemonListResponse {
   previous: string | null;
   results: PokemonSummary[];
 }
-
 export interface PokemonSummary {
   name: string;
   url: string;
 }
-
 export interface PokemonDetails {
   id: number;
   name: string;
   sprites: {
     front_default: string;
+    back_default?: string;
+    front_shiny?: string;
+    back_shiny?: string;
     other?: Record<string, any>;
   };
   types: Array<{ slot: number; type: { name: string } }>;
@@ -24,11 +25,19 @@ export interface PokemonDetails {
   capture_rate: number;
   location_areas: string[];
 }
-
 export interface PokemonSpecies {
   capture_rate: number;
 }
 
 export interface PokemonEncounter {
   location_area: { name: string; url: string };
+}
+
+export interface Sprite {
+  label: string;
+  url: string;
+}
+
+export interface PokemonDetailsWithSprites extends PokemonDetails {
+  spriteList: Sprite[];
 }

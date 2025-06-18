@@ -1,16 +1,22 @@
-.app-container {
-  padding: var(--ion-padding);
+ion-toolbar {
+  padding: 0 10px 0 10px;
 }
 
-ion-list {
-  --ion-item-background: #fafafa;
+ion-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+ion-searchbar {
+  padding: 0;
 }
 
 ion-item {
-  position: relative;
   border-radius: 8px;
+  height: 80px;
   margin-bottom: 8px;
-  --inner-padding-end: 48px; // espaço para o ícone
+  cursor: pointer;
 }
 
 .favorite-icon {
@@ -19,17 +25,53 @@ ion-item {
 }
 
 ion-thumbnail {
-  width: 90px;
-  height: 90px;
+  width: 120px;
+  height: 60px;
 }
 
 ion-thumbnail img {
   width: auto;
-  height: auto;
 }
 
-.empty-state {
-  text-align: center;
-  margin-top: 40px;
-  color: #888;
+@media (max-width: 330px) {
+  ion-thumbnail {
+    width: 80px;
+    height: 40px;
+  }
+  ion-thumbnail img {
+    width: auto;
+  }
+  ion-item {
+    height: 60px;
+  }
+  ion-title {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 260px) {
+ ion-item {
+    h2, p {
+      font-size: 0.75rem;
+    }
+  }
+ion-thumbnail {
+    width: 40px;
+    height: 30px;
+  }
+   ion-title {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 195px) {
+  ion-item {
+    h2, p {
+      display: none;
+    }
+  }
+ion-thumbnail {
+    width: 40px;
+    height: 30px;
+  }
 }
