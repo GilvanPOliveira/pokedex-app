@@ -1,5 +1,3 @@
-// src/app/services/pokeapi.service.spec.ts
-
 import { TestBed } from '@angular/core/testing';
 import {
   HttpClientTestingModule,
@@ -39,7 +37,6 @@ describe('PokeapiService', () => {
       results: [{ name: 'bulbasaur', url: '...' }],
     };
 
-    // Primeira chamada: dispara HTTP
     service.getPokemonList(0, 1).subscribe((res) => {
       expect(res).toEqual(fakeResponse);
     });
@@ -52,7 +49,6 @@ describe('PokeapiService', () => {
     );
     req1.flush(fakeResponse);
 
-    // Segunda chamada com mesmo offset/limit: sem novo HTTP
     service.getPokemonList(0, 1).subscribe((res) => {
       expect(res).toEqual(fakeResponse);
     });
@@ -67,7 +63,7 @@ describe('PokeapiService', () => {
       );
       req.flush({ count: 0, next: null, previous: null, results: [] });
     }
-    // Agora o offset 0 foi evicto → dispara novo fetch
+
     service.getPokemonList(0, 1).subscribe();
     const reqAgain = httpMock.expectOne(
       (req) => req.params.get('offset') === '0'
@@ -80,7 +76,6 @@ describe('PokeapiService', () => {
       expect(res.id).toBe(1);
     });
 
-    // Intercepta as três chamadas: basic, species e encounters
     const basicReq = httpMock.expectOne(`${API}/1`);
     basicReq.flush({
       id: 1,
@@ -105,7 +100,6 @@ describe('PokeapiService', () => {
     const encReq = httpMock.expectOne(`${API}/1/encounters`);
     encReq.flush([{ location_area: { name: 'kanto-route-1' } }] as any);
 
-    // Segunda chamada: sem novas requisições
     service.getPokemonDetails(1).subscribe();
     httpMock.expectNone(`${API}/1`);
     httpMock.expectNone(`${API.replace(/\/pokemon$/, '/pokemon-species')}/1`);

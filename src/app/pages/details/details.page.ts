@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { IonicModule, AlertController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
@@ -12,26 +17,31 @@ import { FavoritesService } from '../../services/favorites.service';
   imports: [IonicModule, CommonModule, RouterModule],
   templateUrl: './details.page.html',
   styleUrls: ['./details.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class DetailsPage implements OnInit {
   details!: PokemonDetailsWithSprites;
   isFav = false;
   captureRatePercent = 0;
+
   constructor(
     private route: ActivatedRoute,
     private pokeService: PokeapiService,
     private favService: FavoritesService,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private cd: ChangeDetectorRef
   ) {}
+
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.isFav = this.favService.isFavorite(id);
     this.pokeService.getPokemonDetails(id).subscribe((d) => {
       this.details = d;
       this.captureRatePercent = Math.round((d.capture_rate / 255) * 100);
+      this.cd.markForCheck();
     });
   }
+
   toggleFavorite(): void {
     const spriteUrl = this.details.spriteList[0]?.url || '';
     const card = {
@@ -42,7 +52,9 @@ export class DetailsPage implements OnInit {
     };
     this.favService.toggleFavorite(card);
     this.isFav = !this.isFav;
+    this.cd.markForCheck();
   }
+
   async showExtras(
     type: 'abilities' | 'moves' | 'location_areas'
   ): Promise<void> {

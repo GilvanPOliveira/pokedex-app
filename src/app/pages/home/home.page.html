@@ -14,6 +14,7 @@
 </ion-header>
 
 <ion-content class="app-container">
+  <!-- Busca -->
   <ion-list *ngIf="searchMode">
     <ion-item *ngFor="let p of searchResults" (click)="openDetails(p.id)" detail>
       <ion-thumbnail slot="start">
@@ -25,7 +26,7 @@
       </ion-label>
       <ion-icon slot="end" name="heart" [color]="isFavorite(p.id) ? 'danger' : 'medium'" class="favorite-icon" (click)="toggleFavorite(p, $event)"></ion-icon>
     </ion-item>
-    <p *ngIf="searchMode && !searchResults.length" class="no-results">
+    <p *ngIf="!searchResults.length" class="no-results">
       Nenhum Pokémon encontrado.
     </p>
   </ion-list>
@@ -58,6 +59,5 @@
     <ion-button *ngIf="!searchMode && pokemons.length < totalCount" expand="block" (click)="loadMore()" [disabled]="loading">
       {{ loading ? 'Carregando...' : 'Carregar mais' }}
     </ion-button>
-
   </ng-container>
 </ion-content>

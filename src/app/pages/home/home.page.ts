@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { from, of } from 'rxjs';
 import { mergeMap, toArray, map, catchError } from 'rxjs/operators';
+
 import { PokeapiService } from '../../services/pokeapi.service';
 import { FavoritesService } from '../../services/favorites.service';
 
@@ -17,11 +18,16 @@ export interface PokemonCard {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, RouterModule],
+  imports: [
+    IonicModule,
+    CommonModule,
+    FormsModule,
+    RouterModule
+  ],
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-
 export class HomePage implements OnInit {
   pokemons: PokemonCard[] = [];
   offset = 0;
@@ -31,53 +37,55 @@ export class HomePage implements OnInit {
   searchTerm = '';
   searchMode = false;
   searchResults: PokemonCard[] = [];
+
   constructor(
     private pokeService: PokeapiService,
     private favService: FavoritesService,
-    private router: Router
+    private router: Router,
+    private cd: ChangeDetectorRef
   ) {}
+
   ngOnInit(): void {
     this.loadPokemons();
   }
+
   private loadPokemons(event?: any): void {
-    if (this.loading) {
-      return;
-    }
+    if (this.loading) return;
     this.loading = true;
     this.pokeService.getPokemonList(this.offset, this.limit).subscribe({
-      next: (list) => {
+      next: list => {
         this.totalCount = list.count;
         from(list.results)
           .pipe(
             mergeMap(
-              (summary) => {
+              summary => {
                 const id = this.pokeService.extractId(summary);
                 return this.pokeService.getPokemonDetails(id).pipe(
-                  map((d) => {
-                    const anim = (d.sprites as any).versions?.[
-                      'generation-v'
-                    ]?.['black-white']?.animated?.front_default;
+                  map(d => {
+                    const anim = (d.sprites as any).versions?.['generation-v']
+                      ?.['black-white']?.animated?.front_default;
                     return {
                       id,
                       name: d.name,
-                      gifUrl: anim || d.sprites.front_default,
+                      gifUrl: anim || d.sprites.front_default
                     } as PokemonCard;
                   }),
                   catchError(() =>
                     of({
                       id,
                       name: summary.name,
-                      gifUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
+                      gifUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
                     } as PokemonCard)
                   )
                 );
               },
-              5 
+              5
             ),
             toArray()
           )
-          .subscribe((cards) => {
+          .subscribe(cards => {
             this.pokemons.push(...cards);
+            this.cd.markForCheck();
             this.offset += this.limit;
             this.loading = false;
             event?.target?.complete();
@@ -86,47 +94,55 @@ export class HomePage implements OnInit {
       error: () => {
         this.loading = false;
         event?.target?.complete();
-      },
+      }
     });
   }
+
   loadMore(event?: any): void {
     this.loadPokemons(event);
   }
+
   openDetails(id: number): void {
     this.router.navigate(['/details', id]);
   }
+
   isFavorite(id: number): boolean {
     return this.favService.isFavorite(id);
   }
+
   toggleFavorite(p: PokemonCard, e: Event): void {
     e.stopPropagation();
     this.favService.toggleFavorite(p);
+    this.cd.markForCheck();
   }
+
   onSearchTermChange(): void {
     const term = this.searchTerm.trim().toLowerCase();
     if (!term) {
       this.searchMode = false;
       this.searchResults = [];
+      this.cd.markForCheck();
       return;
     }
     this.searchMode = true;
     this.searchResults = [];
     this.pokeService.getPokemonDetails(term).subscribe({
-      next: (d) => {
-        const anim = (d.sprites as any).versions?.['generation-v']?.[
-          'black-white'
-        ]?.animated?.front_default;
+      next: d => {
+        const anim = (d.sprites as any).versions?.['generation-v']
+          ?.['black-white']?.animated?.front_default;
         this.searchResults = [
           {
             id: d.id,
             name: d.name,
-            gifUrl: anim || d.sprites.front_default,
-          },
+            gifUrl: anim || d.sprites.front_default
+          }
         ];
+        this.cd.markForCheck();
       },
       error: () => {
         this.searchResults = [];
-      },
+        this.cd.markForCheck();
+      }
     });
   }
 }
