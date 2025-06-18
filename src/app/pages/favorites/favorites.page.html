@@ -17,7 +17,7 @@
               <ion-icon name="trash" slot="icon-only"></ion-icon>
             </ion-button>
 
-            <img [src]="p.gifUrl" [alt]="p.name" (click)="openDetails(p.id)" />
+            <img [src]="p.gifUrl" loading="lazy" [alt]="p.name" (click)="openDetails(p.id)" />
 
             <ion-card-header (click)="openDetails(p.id)">
               <ion-card-title>{{ p.name | titlecase }}</ion-card-title>

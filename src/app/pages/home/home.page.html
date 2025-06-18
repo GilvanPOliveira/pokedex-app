@@ -17,7 +17,7 @@
   <ion-list *ngIf="searchMode">
     <ion-item *ngFor="let p of searchResults" (click)="openDetails(p.id)" detail>
       <ion-thumbnail slot="start">
-        <img [src]="p.gifUrl" [alt]="p.name" />
+        <img [src]="p.gifUrl" loading="lazy" [alt]="p.name" />
       </ion-thumbnail>
       <ion-label>
         <h2>{{ p.name | titlecase }}</h2>
@@ -34,7 +34,7 @@
     <ion-list *ngIf="pokemons.length; else semDados">
       <ion-item *ngFor="let p of pokemons" (click)="openDetails(p.id)" detail>
         <ion-thumbnail slot="start">
-          <img [src]="p.gifUrl" [alt]="p.name" />
+          <img [src]="p.gifUrl" loading="lazy" [alt]="p.name" />
         </ion-thumbnail>
         <ion-label>
           <h2>{{ p.name | titlecase }}</h2>
